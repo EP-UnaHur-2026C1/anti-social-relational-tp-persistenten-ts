@@ -10,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Imagen.belongsToMany(models.post, {
-        through: 'Imagen_Post', as: 'Posts'})
+      Imagen.belongsToMany(models.Post, {
+        through: 'Imagen_Post', as: 'Posts'}) // Una imagen puede pertenecer a muchos posts, y un post puede tener muchas imagenes
     }
   }
   Imagen.init({
-    URL: DataTypes.STRING
+    URL: {type: DataTypes.STRING, allowNull:false,unique: true}
   }, {
     sequelize,
     modelName: 'Imagen',

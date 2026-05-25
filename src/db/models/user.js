@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(models.Comentario,{
         foreignKey: 'idComentario', sourceKey: 'id'
-      })
+      }) // Un usuario tiene muchos comentarios
 
       User.hasMany(models.Post, {
         foreignKey: 'idPost', sourceKey: 'id'
-      })
+      }) // Un usuario tiene muchos posts
     }
   }
   User.init({
