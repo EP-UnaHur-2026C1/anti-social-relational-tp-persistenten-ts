@@ -1,3 +1,8 @@
 const { Imagen } = require("../db/models")
 
-module.exports = { };
+const findAll = async(_, res) => {
+    const data = await Imagen.findAll({})
+    res.status(200).json(data)
+}
+
+module.exports = {finAll};
