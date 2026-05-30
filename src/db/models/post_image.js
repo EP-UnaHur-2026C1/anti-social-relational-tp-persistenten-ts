@@ -15,8 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: 'id'
       });
 
-      // Post_Image.belongsToMany(models.Post, {
-      //   through: 'Post_Image_Post', as: 'Posts'}) // Una Post_Image puede pertenecer a muchos posts, y un post puede tener muchas Post_Imagees
     }
   }
   Post_Image.init({
