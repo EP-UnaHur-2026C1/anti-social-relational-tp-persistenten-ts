@@ -3,6 +3,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3001;
 const routes = require('./routes');
 const init = require('./init');
+const {Post_Image, Post, Tag, User, Comentario} = require('./db/models');
 
 app.use(express.json());
 app.use(routes);
