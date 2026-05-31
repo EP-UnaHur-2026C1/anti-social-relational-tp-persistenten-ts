@@ -1,93 +1,99 @@
-const { Post, Imagen, Tag } = require("../db/models")
+const { Post, Post_Image, Tag, Comentario } = require('../db/models');
 
-const getAll = async(_, res) => {
-    try{
-        const data = await Post.findAll({})
-        res.status(200).json(data)
-    } catch (err){
-        res.status(500).json({message: 'No se encontraron posts'})
-    }   
-}
+const getAll = async (req, res) => {
+  try {
+    const posts = await Post.findAll({
+      include: [
+        { association: 'Tags' },
+        { model: Post_Image }
+      ]
+    });
+    res.json(posts);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({message: 'Error al obtener posts' });
+  }
+};
 
-const getById = async (req,res) =>{
-    try {
-        const id = req.params.id
-        const data = await Post.findByPk(id)
-        res.status(200).json(data)
-    } catch(err){
-        res.status(500).json({message: 'Post no encontrado'})
+const getById = async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id, {
+      include: [
+        { association: 'Tags' },
+        { model: Post_Image },
+        { model: Comentario, required: false }
+      ]
+    });
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({message: `Post ${req.params.id} no encontrado` });
+  }
+};
+
+const createPost = async (req, res) => {
+  try {
+    const { descripcion, userId, imagenes, tags } = req.body;
+
+    const post = await Post.create({ descripcion, userId });
+
+    if (imagenes && imagenes.length > 0) {
+      const promesasImagenes = imagenes.map((url) =>
+        Imagen.create({ URL: url, postId: post.id })
+      );
+      await Promise.all(promesasImagenes);
     }
-}
 
-const createPost = async (req, res) =>{
-    try {
-        const data = req.body
-        const record = await Post.create(data)
-        res.status(201).json(record) 
-    } catch(err){
-        res.status(500).json({message: 'Error al crear el post'})
+    if (tags && tags.length > 0) {
+      await post.addTags(tags);
     }
-}
 
-const createPostImagenTag = async (req, res) =>{ 
-    const data = req.body
-    const post = await Post.create({
-        descripcion: data.descripcion
-    })
-    
-    const promesas = []
-    data.imagenes.forEach((i) => {
-        promesas.push(Imagen.create(i))
-    })
+    const postCompleto = await Post.findByPk(post.id, {
+      include: [{ association: 'Tags' }, { model: Post_Image }]
+    });
 
-    // también se podría hacer que busque si existe la imagen para asociarla y sino la crea
+    res.status(201).json(postCompleto);
+  } catch (err) {
+    res.status(500).json({message: 'Error al crear post' });
+  }
+};
+const updatePost = async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    await post.update(req.body);
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({message: 'Error al modificar post' });
+  }
+};
 
-    // data.imagenes.forEach((i) => {
-    //     promesas.push(Imagen.findOrCreate({
-    //          where: {id: {[Op.eq]: i.id}},
-    //          defaults: i
-    //     }))
-    // })
+const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    await post.destroy();
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({message: 'Error al eliminar post'});
+  }
+};
 
-    // result = await Promise.all(promesas)
-    // const imagenesYTags = result.map(([imagenTag]) => imagenTag)
-    // await post.addImagenesTags(imagenesYTags)
+const addImage = async (req, res) => {
+  try {
+    const imagen = await Post_Image.create({ URL: req.body.URL, postId: req.params.id });
+    res.status(201).json(imagen);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al añadir imagen' });
+  }
+};
 
-    data.tags.forEach((t) => {
-        promesas.push(Tag.create(t))
-    })
+const deleteImage = async (req, res) => {
+  try {
+    const imagen = await Post_Image.findByPk(req.params.imgId);
+    if (!imagen) return res.status(404).json({ error: 'Imagen no encontrada' });
+    await imagen.destroy();
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ message: 'Error al eliminar imagen' });
+  }
+};
 
-    result = await Promise.all(promesas)
-
-    await post.addImagenesTags(result)
-
-    res.status(201).json({...post.dataValues, imagenes: await post.getImagenes({joinTableAttributes: []}), tags: await post.getTags({joinTableAttributes: []})}) 
-}
-
-const updatePost = async (req, res) =>{
-    
-}
-
-const deletePost = async (req, res) =>{
-    
-}
-
-const getWithImagenesById = async (req, res) =>{
-    try {
-        const id = req.params.id
-        const data = await Post.finOne({
-            where: {id}, 
-            include: [{
-                model: Imagen,
-                as: "imagenes",
-                through: {
-                    attributes: [],
-                }
-            }]
-        })
-    }catch(err){
-        res.status(500).json({message: 'Imagen no encontrada en el post'}) // ---
-    }
-}
-
-module.exports = {getAll, getById, createPost, createPostImagenTag, updatePost, deletePost, getWithImagenesById};
+module.exports = { getAll, getById, createPost, updatePost, deletePost, addImage, deleteImage };

@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       Post.belongsToMany(models.Tag, {
         through: "Tag_Post", as: 'Tags'}) // Un post puede tener muchos tags, y un tag puede estar asociada a muchos posts
 
-      Post.belongsToMany(models.Post_Image, {
-        through: 'Imagen_Post', as: 'Imagenes'}) // Un post puede tener muchas imagenes, y una imagen puede pertenecer a muchos posts
+      Post.hasMany(models.Post_Image, {
+        foreignKey: 'postId', id:'id'}) // Un post puede tener muchas imagenes, y una imagen puede pertenecer a muchos posts
 
       Post.belongsTo(models.User, {
         foreignKey: 'userId', targetKey: 'id'}) // Muchos posts pertenecen a un usuario
