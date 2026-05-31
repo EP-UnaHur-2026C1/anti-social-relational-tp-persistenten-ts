@@ -1,7 +1,11 @@
 const { Router } = require("express");
-const { findAll } = require('../controllers/comentarios.controler');
+const { getAll, getById, createComentario, updateComentario, deleteComentario } = require('../controllers/comentarios.controller');
 router = Router();
 
-router.get('/', findAll);
+// router.get('/', getAll);
+// router.get('/:id', getById);
+// router.post('/', createComentario);
+// router.put('/:id', updateComentario);
+// router.delete('/:id', deleteComentario);
 
 module.exports = router;
