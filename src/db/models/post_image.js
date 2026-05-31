@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: 'id'
       });
 
+      Imagen.belongsTo(models.Post, {
+        through: 'Imagen_Post', as: 'Posts'}) // Una imagen puede pertenecer a un solo post, y un post puede tener muchas imagenes
     }
   }
   Post_Image.init({

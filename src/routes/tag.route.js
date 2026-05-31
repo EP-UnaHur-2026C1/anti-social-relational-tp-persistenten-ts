@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const { getAll, getById, createTag, updateTag, deleteTag } = require('../controllers/tags.controler');
+const { getAll, getById, createTag, updateTag, deleteTag } = require('../controllers/tags.controller');
 const {validarTagById, validarTagSchema} = require('../middlewares/tag.middleware')
-
 
 router.get('/', getAll);
 router.get('/:id',validarTagById,  getById);
