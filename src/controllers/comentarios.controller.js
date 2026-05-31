@@ -39,5 +39,3 @@ const deleteComentario = async (req, res) =>{
 
 
 module.exports = {getAll, getById, createComentario, updateComentario, deleteComentario};
-
-module.exports = { };

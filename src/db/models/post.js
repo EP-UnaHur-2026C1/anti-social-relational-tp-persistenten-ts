@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId', targetKey: 'id'}) // Muchos posts pertenecen a un usuario
       
       Post.hasMany(models.Comentario, {
-        foreignKey: 'idComentario', sourceKey: 'id'}) // Un post tiene muchos comentarios
+        foreignKey: 'postId', sourceKey: 'id'}) // Un post tiene muchos comentarios
     }
   }
   Post.init({
