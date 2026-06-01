@@ -1,11 +1,13 @@
-const { Post, Post_Image, Tag, Comentario } = require('../db/models');
+const { Post, Post_Image, Tag, User, Comentario } = require('../db/models');
 
 const getAll = async (req, res) => {
   try {
     const posts = await Post.findAll({
       include: [
         { association: 'Tags' },
-        { model: Post_Image }
+        { model: Post_Image, required: false },
+        { model: Comentario, required: false },
+        { model: User}
       ]
     });
     res.json(posts);

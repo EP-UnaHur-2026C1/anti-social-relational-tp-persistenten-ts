@@ -25,12 +25,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL, // Indica que no va a la base de datos, sino que existe solo en el modelo
       get() {
         // Aca se hace el calculo para definir el atributo
-        return new Date(this.createdAt) > new Date() - 182.5 * 1000 * 60 * 60 * 24; // Resta 6 meses en milisegundos a la fecha de hoy
+        return this.fechaPublicacion > new Date(Date.now() - 182.5 * 24 * 60 * 60 * 1000);// Resta 6 meses (182.5 dias, ese valor se puede cambiar) en milisegundos a la fecha de hoy
+        // Otros ejemplos:
+        // 5 * 1000                5 segundos
+        // 30 * 1000               30 segundos
+        // 2 * 60 * 1000           2 minutos
+        // 15 * 60 * 1000          15 minutos
+        // 2 * 60 * 60 * 1000      2 horas
+        // 7 * 24 * 60 * 60 * 1000 7 días
       }
   }}, {
     sequelize,
     modelName: 'Comentario',
-    createdAt: 'fechaPublicacion' // Cambia el nombre del campo que sequelize crea automaticamente para la fecha de publicacion
+    createdAt: 'fechaPublicacion', // Cambia el nombre del campo que sequelize crea automaticamente para la fecha de publicacion
+    updatedAt: false // Desactiva este campo de modificado
   });
   return Comentario;
 };

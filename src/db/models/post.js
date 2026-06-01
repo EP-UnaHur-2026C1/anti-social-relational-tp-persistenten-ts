@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Post',
+    createdAt: 'fechaPublicacion',
+    updatedAt: false
   });
   return Post;
 };
