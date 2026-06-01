@@ -17,6 +17,23 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post, {
         foreignKey: 'userId', sourceKey: 'id'
       }) // Un usuario tiene muchos posts
+
+      // Para la parte donde los users pueden seguir y ser seguidos por otros
+      //Parte para obtener los seguidores
+      User.belongsToMany(User, {
+        as: 'seguidores',         // Nombre de la relacion
+        through: 'User_Seguidor', // Nombre de la tabla intermedia
+        foreignKey: 'siguiendoId',
+        otherKey: 'seguidorId'    // La columna dondne va el id del otro modelo relacionado
+      });
+
+      //Parte para obtener los seguidos
+      User.belongsToMany(User, {
+        as: 'siguiendo',
+        through: 'User_Seguidor',
+        foreignKey: 'seguidorId',
+        otherKey: 'siguiendoId'
+      });
     }
   }
   User.init({

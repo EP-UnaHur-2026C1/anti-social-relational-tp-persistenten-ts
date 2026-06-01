@@ -3,7 +3,15 @@ const init = async () => {
   const { Post_Image, Post, Tag, User, Comentario } = require('./db/models');
   await db.sync({ force: true });
 
-  const user1 = await User.create({ nickName: "Usuario1" });
+  const [user1, user2, user3, user4] = await Promise.all([
+    User.create({ nickName: "Usuario1" }),
+    User.create({nickName:"Usuario2"}),
+    User.create({nickName: "Usuario3"}),
+    User.create({nickName: "Usuario4"})
+  ])
+
+  // const user1 = await User.create({ nickName: "Usuario1" });
+  
 
   const post1 = await Post.create({
     descripcion: "Post 1 de prueba",
