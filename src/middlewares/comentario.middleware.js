@@ -1,4 +1,4 @@
-const { Comentario, User, Post } = require('../db/models');
+const { Comentario } = require('../db/models');
 const { validarById } = require('./generic.middleware');
 const comentarioSchema = require('../schemas/comentario.schema');
 const genericSchemaValidator = require('../schemas/genericSchemaValidator');
@@ -19,29 +19,20 @@ const validarComentarioSchema = (req, res, next) => {
   next();
 };
 
-// Verifica no se comente un post que no exista o que sea un usuario falso
-const verificarRelacionesComentario = async (req, res, next) => {
-  try {
-    const { userId, postId } = req.body;
-    
-    if (userId) {
-      const userExits = await User.findByPk(userId);
-      if (!userExits) return res.status(404).json({ error: `El userId ${userId} no existe` });
-    }
-    
-    if (postId) {
-      const postExists = await Post.findByPk(postId);
-      if (!postExists) return res.status(404).json({ error: `El postId ${postId} no existe` });
-    }
+const verificarComentarioPerteneceAlPost = async (req, res, next) => {
+  const comentario = await Comentario.findByPk(req.params.comentarioId);
 
-    next();
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  if (comentario.postId !== Number(req.params.id)) {
+    return res.status(400).json({
+      error: 'El comentario no pertenece al post indicado'
+    });
   }
+
+  next();
 };
 
 module.exports = {
   validarComentarioById,
   validarComentarioSchema,
-  verificarRelacionesComentario,
+  verificarComentarioPerteneceAlPost
 };

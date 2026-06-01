@@ -98,4 +98,42 @@ const deleteImage = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getById, createPost, updatePost, deletePost, addImage, deleteImage };
+const getComentarios = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const post = await Post.findByPk(id, {
+      include: [{ model: Comentario, required: false }]
+    });
+    const visibles = post.Comentarios.filter(c => c.estaVisible);
+    /*Se filtra de esta forma y no con un where porque el atributo estaVisible es virtual,
+    no existe en la base de datos, sino que se calcula a partir de la fecha de publicacion*/
+    res.json(visibles);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al obtener comentarios' });
+  }
+};
+
+const addComentario = async (req, res) => {
+  try {
+    const {descripcion, userId} = req.body;
+    const comentario = await Comentario.create({
+      descripcion: descripcion,
+      userId: userId,
+      postId: req.params.id
+    });
+    res.status(201).json(comentario);
+  } catch (err) {
+    res.status(500).json({ message: 'Error al añadir comentario' });
+  }
+};
+
+const deleteComentario = async (req, res) => {
+  try {
+    await req.comentario.destroy();
+    res.status(204).json({message: 'Comentario eliminado'});
+  } catch (err) {
+    res.status(500).json({message: "Error al eliminar comentario"});
+  }
+};
+
+module.exports = { getAll, getById, createPost, updatePost, deletePost, addImage, deleteImage, getComentarios, addComentario, deleteComentario };

@@ -5,14 +5,14 @@ router = Router();
 const {
   validarComentarioSchema,
   validarComentarioById,
-  verificarRelacionesComentario
+  verificarComentarioPerteneceAlPost
 } = require('../middlewares/comentario.middleware');
 
 
 router.get('/', getAll);
 router.get('/:id', validarComentarioById, getById);
-router.post('/', validarComentarioSchema, verificarRelacionesComentario, createComentario);
+router.post('/', validarComentarioSchema, verificarComentarioPerteneceAlPost, createComentario);
 router.put('/:id', validarComentarioById, validarComentarioSchema, updateComentario);
-router.delete('/:id', validarComentarioById,  deleteComentario);
+router.delete('/:id', validarComentarioById, verificarComentarioPerteneceAlPost, deleteComentario);
 
 module.exports = router;
