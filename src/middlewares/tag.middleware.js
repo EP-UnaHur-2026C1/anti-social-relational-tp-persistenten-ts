@@ -11,7 +11,7 @@ const validarTagSchema = (req,res,next) => {
         res.status(400).json({
             errores: error.details.map((e)=>{
                 return{
-                    atributo: e.path[0],
+                    atributo: e.path.join('.'),
                     detalle: e.message
                 }
             })

@@ -5,6 +5,7 @@ const comentarioRoute = require('./comentario.route');
 const tagRoute = require('./tag.route');
 const imagenRoute = require('./imagen.route');
 
+
 router.use('/users', userRoute);
 router.use('/posts', postRoute);
 router.use('/comentarios', comentarioRoute);

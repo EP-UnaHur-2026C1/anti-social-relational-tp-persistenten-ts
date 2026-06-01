@@ -5,7 +5,7 @@ const {validarTagById, validarTagSchema} = require('../middlewares/tag.middlewar
 router.get('/', getAll);
 router.get('/:id',validarTagById,  getById);
 router.post('/',validarTagSchema,  createTag);
-router.put('/:id',validarTagById,  updateTag);
+router.put('/:id',validarTagById, validarTagSchema, updateTag);
 router.delete('/:id',validarTagById,  deleteTag);
 
 
