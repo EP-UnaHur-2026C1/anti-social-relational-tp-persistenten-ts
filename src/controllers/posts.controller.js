@@ -39,8 +39,8 @@ const createPost = async (req, res) => {
     const post = await Post.create({ descripcion, userId });
 
     if (imagenes && imagenes.length > 0) {
-      const promesasImagenes = imagenes.map((url) =>
-        Imagen.create({ URL: url, postId: post.id })
+      const promesasImagenes = imagenes.map((imagen) =>
+        Post_Image.create({ URL: imagen.url, postId: post.id })
       );
       await Promise.all(promesasImagenes);
     }
@@ -55,6 +55,7 @@ const createPost = async (req, res) => {
 
     res.status(201).json(postCompleto);
   } catch (err) {
+    console.log(err)
     res.status(500).json({message: 'Error al crear post' });
   }
 };
