@@ -10,4 +10,4 @@ const validarById = (modelo) =>{
     }
 }
 
-module.exports = validarById
+module.exports = {validarById};

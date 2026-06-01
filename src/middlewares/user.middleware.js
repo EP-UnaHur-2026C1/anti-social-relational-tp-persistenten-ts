@@ -1,5 +1,5 @@
 const { User } = require('../db/models')
-const validarById = require('./generic.middleware');
+const {validarById} = require('./generic.middleware');
 const userSchema = require('../schemas/user.schema');
 const genericSchemaValidator = require('../schemas/genericSchemaValidator');
 

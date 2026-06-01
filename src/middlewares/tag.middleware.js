@@ -1,5 +1,5 @@
 const {Tag} = require('../db/models')
-const validarById = require('./generic.middleware')
+const {validarById} = require('./generic.middleware')
 const tagSchema = require('../schemas/tag.schema')
 const genericSchemaValidator = require('../schemas/genericSchemaValidator')
 
